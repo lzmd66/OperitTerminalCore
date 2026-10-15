@@ -562,6 +562,9 @@ class LocalTerminalProvider(
         env["TERMUX_PREFIX"] = usrDir.absolutePath
         env["LD_LIBRARY_PATH"] = "${nativeLibDir}:${binDir.absolutePath}"
         env["PROOT_LOADER"] = File(binDir, "loader").absolutePath
+        // HarmonyOS / strict-seccomp devices: proot seccomp fast path returns ENOSYS for
+        // chdir/getcwd/shebang/static-execve. Force the plain ptrace path. See issues #1128, #1047.
+        env["PROOT_NO_SECCOMP"] = "1"
         env["TMPDIR"] = File(filesDir, "tmp").absolutePath
         env["PROOT_TMP_DIR"] = File(filesDir, "tmp").absolutePath
         env["TERM"] = "xterm-256color"
